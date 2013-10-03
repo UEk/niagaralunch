@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+	<meta charset="UTF-8">
+	<title>Lunch på Dockan?</title>
+	<meta name="description" content="Dockan, Malmö, lunch, i dag?">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+
+<body>
+	<header role="banner">
+    	<h1>Lunch på Dockan?</h1>
+	</header>
+    
+	<main role="main">
+    {% for r in restaurants %}
+    	<div class="restaurant">
+    		<h2>{{ r.get_name() }}</h2>
+			<ul>
+				{% for c in r.get_courses() %}
+					<li>{{ c }}</li>
+				{% endfor %}
+			</ul>
+    	</div>
+    {% endfor %}
+    </main>
+	
+	<footer role="contentinfo">
+		<p>By <a href="http://fredrikohlin.com/">Fredrik Ohlin</a></p>
+	</footer>
+</body>
+</html>

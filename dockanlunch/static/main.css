@@ -1,0 +1,53 @@
+main, footer{
+    display: block;
+}
+body{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:1em;
+    margin:0;
+    background-color:#fff;
+    color:#000;
+    text-align:center;
+}
+h1{
+    font-weight:100;
+    margin:0;
+}
+h2{
+    font-weight:300;
+    margin:0;
+}
+
+ul{
+    list-style:none;
+    padding-left:0;
+}
+p, li{
+    font-weight:300;
+}
+li{
+    margin-bottom:0.75em;
+}
+
+header{
+    padding:1em 0;
+    background-color:#eee;
+}
+
+div.restaurant{
+    padding:0.75em 0.75em 0.5em;
+}
+div.restaurant:nth-child(1){
+    background-color:#ddd;
+}
+div.restaurant:nth-child(2){
+    background-color:#ccc;
+}
+
+
+footer{
+    font-size:0.8em;
+    padding:1.5em 0;
+    text-transform:uppercase;
+    background-color:#eee;
+}
