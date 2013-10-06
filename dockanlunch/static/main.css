@@ -72,4 +72,7 @@ footer{
 		font-weight:300;
 		font-size:1em;
 	}
+	.tip{
+	    display:none;
+	}
 }
