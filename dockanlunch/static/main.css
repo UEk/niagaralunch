@@ -13,7 +13,7 @@ h1{
     font-weight:100;
 }
 h2{
-    font-size:1.25em;
+    font-size:1.125em;
     font-weight:300;
 }
 h1, h2{
@@ -57,7 +57,7 @@ footer{
     font-size:0.8em;
     padding:1.5em 0;
     text-transform:uppercase;
-    background-color:#ccc;
+    background-color:#F6F6F6;
 }
 
 @media screen and (height:568px), screen and (height:480px){
