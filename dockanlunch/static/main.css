@@ -7,15 +7,20 @@ body{
     margin:0;
     background-color:#fff;
     color:#000;
-    text-align:center;
 }
 h1{
+    font-size:1.7em;
     font-weight:100;
-    margin:0;
 }
 h2{
+    font-size:1.4em;
     font-weight:300;
+}
+h1, h2{
     margin:0;
+}
+header, footer, h2{
+    text-align:center;
 }
 
 ul{
@@ -23,7 +28,7 @@ ul{
     padding-left:0;
 }
 p, li{
-    font-weight:300;
+    font-weight:200;
 }
 li{
     margin-bottom:0.75em;
