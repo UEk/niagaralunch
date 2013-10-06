@@ -9,11 +9,11 @@ body{
     color:#000;
 }
 h1{
-    font-size:1.7em;
+    font-size:1.5em;
     font-weight:100;
 }
 h2{
-    font-size:1.4em;
+    font-size:1.25em;
     font-weight:300;
 }
 h1, h2{
@@ -21,6 +21,10 @@ h1, h2{
 }
 header, footer, h2{
     text-align:center;
+}
+a{
+    color:#1D5FFA;
+    text-decoration:none;
 }
 
 ul{
@@ -35,24 +39,37 @@ li{
 }
 
 header{
-    padding:1em 0;
-    background-color:#eee;
+    padding:1.25em 0 0.5em;
+    background-color:#F6F6F6;
 }
 
 div.restaurant{
     padding:0.75em 0.75em 0.5em;
 }
 div.restaurant:nth-child(1){
-    background-color:#ddd;
+    background-color:#F6F6F6;
 }
 div.restaurant:nth-child(2){
-    background-color:#ccc;
+    background-color:#eee;
 }
-
 
 footer{
     font-size:0.8em;
     padding:1.5em 0;
     text-transform:uppercase;
-    background-color:#eee;
+    background-color:#ccc;
+}
+
+@media screen and (height:568px), screen and (height:480px){
+    header{
+		padding-top:1.75em;
+		background-color:#ccc;
+		color:#fff;
+		position: -webkit-sticky;
+		top:0;
+	}
+	header h1{
+		font-weight:300;
+		font-size:1em;
+	}
 }
