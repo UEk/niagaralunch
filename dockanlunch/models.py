@@ -1,6 +1,8 @@
 import abc
 from urllib2 import urlopen
+from datetime import datetime
 from bs4 import BeautifulSoup
+from helpers import get_day_name
 
 class Restaurant:
     __metaclass__ = abc.ABCMeta
@@ -44,5 +46,26 @@ class DOCItaliano(Restaurant):
                 ]
     
 
+class P2(Restaurant):
+    def fetch(self):
+        soup = BeautifulSoup(urlopen("http://www.restaurangp2.se/sv/sidor/176/171/lunchmeny.aspx"),
+                             "html5lib", from_encoding="UTF-8")
+        container = soup.find("div", id="MyBPControlLayout_Container_510_divContainer")
+        t = container.get_text().lower()
+        d0 = datetime.now().weekday()
+        d1 = (d0+1) % 7
+        day_start = t.find(get_day_name(d0))
+        next_day_start = t.find(get_day_name(d1))
+        
+        if day_start > 0 and next_day_start > day_start:
+            courses_text = container.get_text()[day_start:next_day_start]
+            # Remove non-braking spaces
+            courses_text = courses_text.replace(u'\xa0', u' ')
+            # Exclude day heading and empty line
+            return courses_text.split(u'\n')[1:-1]
+        return []
+    
+
 def get_all(cache):
-    return (Stereo(cache), DOCItaliano(cache))
+    return [r(cache) for r in (Stereo, DOCItaliano, P2)]
+
