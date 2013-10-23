@@ -33,6 +33,7 @@ class Stereo(Restaurant):
         courses = [el.get_text() for el in content.find_all("li")]
         return courses
     
+
 class DOCItaliano(Restaurant):
     def fetch(self):
         soup = BeautifulSoup(urlopen("http://www.docitaliano.se/"), "html5lib")
@@ -71,6 +72,23 @@ class P2(Restaurant):
         return []
     
 
+class WhiteShark(Restaurant):
+    def fetch(self):
+        soup = BeautifulSoup(urlopen("http://gastrogate.com/restaurang/whiteshark/page/3/"), "html5lib")
+        container = soup.find("table", class_ = "lunch_menu")
+        d = datetime.now().weekday()
+        courses = []
+        if d < 5:
+            course_trs = container.find_all("tr", class_ = "no_divider")
+            todays = course_trs[d].find("td", class_ = "td_title")
+            if todays:
+                courses.append(todays.get_text())
+            alternative = course_trs[5].find("td", class_ = "td_title")
+            if alternative:
+                courses.append(alternative.get_text())
+        return courses
+    
+
 def get_all(cache):
-    return [r(cache) for r in (Stereo, DOCItaliano, P2)]
+    return [r(cache) for r in (Stereo, DOCItaliano, P2, WhiteShark)]
 

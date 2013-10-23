@@ -46,10 +46,10 @@ header{
 div.restaurant{
     padding:0.75em 0.75em 0.5em;
 }
-div.restaurant:nth-child(1){
+div.restaurant:nth-child(2n+1){
     background-color:#F6F6F6;
 }
-div.restaurant:nth-child(2){
+div.restaurant:nth-child(2n){
     background-color:#eee;
 }
 
