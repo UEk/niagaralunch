@@ -48,6 +48,11 @@ class DOCItaliano(Restaurant):
 
 class P2(Restaurant):
     def fetch(self):
+        """Finds today's P2 courses by a text search, rather than
+        looking for specific elements.
+        """
+        # Their site specifies `bizpart.se` - that is obviously a very bad product.
+        # At least send the encoding of the document ffs.
         soup = BeautifulSoup(urlopen("http://www.restaurangp2.se/sv/sidor/176/171/lunchmeny.aspx"),
                              "html5lib", from_encoding="UTF-8")
         container = soup.find("div", id="MyBPControlLayout_Container_510_divContainer")
