@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import abc
 from urllib2 import urlopen
 from datetime import datetime
@@ -60,8 +62,11 @@ class P2(Restaurant):
         t = container.get_text().lower()
         d0 = datetime.now().weekday()
         d1 = (d0+1) % 7
-        day_start = t.find(get_day_name(d0))
-        next_day_start = t.find(get_day_name(d1))
+        # Heroku doesn't have non-English locales installed...
+        days = [u'måndag', u'tisdag', u'onsdag', u'torsdag', u'fredag',
+                     u'lördag', u'söndag']
+        day_start = t.find(days[d0])
+        next_day_start = t.find(days[d1])
         
         if day_start > 0 and next_day_start > day_start:
             courses_text = container.get_text()[day_start:next_day_start]
