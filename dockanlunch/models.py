@@ -4,7 +4,6 @@ import abc
 from urllib2 import urlopen
 from datetime import datetime
 from bs4 import BeautifulSoup
-from helpers import get_day_name
 
 class Restaurant:
     __metaclass__ = abc.ABCMeta
