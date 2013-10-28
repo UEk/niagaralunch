@@ -78,7 +78,8 @@ class P2(Restaurant):
 
 class WhiteShark(Restaurant):
     def fetch(self):
-        soup = BeautifulSoup(urlopen("http://gastrogate.com/restaurang/whiteshark/page/3/"), "html5lib")
+        soup = BeautifulSoup(urlopen("http://gastrogate.com/restaurang/whiteshark/page/3/"),
+                             "html5lib", from_encoding="UTF-8")
         container = soup.find("table", class_ = "lunch_menu")
         d = datetime.now().weekday()
         courses = []
