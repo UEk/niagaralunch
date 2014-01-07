@@ -17,7 +17,10 @@ class Restaurant:
     def get_courses(self):
         courses = self.cache.get(self.get_name())
         if courses is None:
-            courses = self.fetch()
+            try:
+                courses = self.fetch()
+            except:
+                return []
             if courses:
                 self.cache.set(self.get_name(), courses, timeout=3600)
         return courses
