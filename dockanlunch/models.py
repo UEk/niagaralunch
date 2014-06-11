@@ -41,14 +41,20 @@ class Stereo(Restaurant):
 class DOCItaliano(Restaurant):
     def fetch(self):
         soup = BeautifulSoup(urlopen("http://www.docitaliano.se/"), "html5lib")
-        content = soup.find("div", class_ = "post_content")
-        strongs = content.find_all("strong")
-        for i in xrange(len(strongs)):
-            if "Dagens lunch" in strongs[i].get_text():
-                return [
-                    strongs[i+1].parent.get_text(),
-                    strongs[i+1].parent.find_next("p").find_next("strong").parent.get_text()
-                ]
+        container = soup.find("div", class_ = "post_content")
+        t = container.get_text().lower()
+        d0 = datetime.now().weekday()
+        d1 = (d0+1) % 7
+        # Heroku doesn't have non-English locales installed...
+        days = [u'måndag', u'tisdag', u'onsdag', u'torsdag', u'fredag',
+                     u'lördag', u'söndag']
+        day_start = t.find(days[d0])
+        next_day_start = t.find(days[d1])
+        if day_start > 0 and next_day_start > day_start:
+            courses_text = container.get_text()[day_start:next_day_start]
+            courses_text.replace(u'\xa0', '')
+            return courses_text.split("\n")[1:3]
+        return []
     
 
 class P2(Restaurant):
