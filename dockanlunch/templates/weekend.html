@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block main %}
+	<div class="weekend">
+	<h2>Nej, inte på helgen</h2>
+	<p>Under måndag-fredag visas dagens lunch för:</p>
+	<ul>
+		{% for r in restaurants %}
+			<li><a href="{{ r.url }}">{{ r.get_name() }}</a></li>
+		{% endfor %}
+	</ul>
+	</div>
+{% endblock %}

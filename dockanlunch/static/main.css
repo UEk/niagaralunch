@@ -43,7 +43,7 @@ header{
     background-color:#F6F6F6;
 }
 
-div.restaurant{
+div.restaurant, .weekend{
     padding:0.75em 0.75em 0.5em;
 }
 div.restaurant:nth-child(2n+1){
@@ -51,6 +51,10 @@ div.restaurant:nth-child(2n+1){
 }
 div.restaurant:nth-child(2n){
     background-color:#eee;
+}
+
+.weekend{
+    text-align:center;
 }
 
 footer{
