@@ -12,7 +12,10 @@ class Restaurant:
         self.cache = cache
     
     def get_name(self):
-        return self.__class__.__name__
+        if hasattr(self, "name"):
+            return self.name
+        else:
+            return self.__class__.__name__
     
     def get_courses(self):
         courses = self.cache.get(self.get_name())
@@ -82,6 +85,7 @@ class Stereo(Restaurant):
     
 
 class DOCItaliano(Restaurant):
+    name = u"DOC Italiano"
     url = "http://www.docitaliano.se/"
     
     def fetch(self):
@@ -103,7 +107,7 @@ class P2(Restaurant):
         return menu_text.split("\n")[1:4]
 
 class Arstiderna(Restaurant):
-    name = "Årstiderna By The Sea"
+    name = u"Årstiderna By The Sea"
     url = "http://arstidernabythesea.se/?cat=21"
     
     def fetch(self):
