@@ -25,36 +25,68 @@ class Restaurant:
                 self.cache.set(self.get_name(), courses, timeout=3600)
         return courses
     
+    def day_range(self, forced_start_day = None):
+        # Heroku doesn't have non-English locales installed...
+        days = [u'måndag', u'tisdag', u'onsdag', u'torsdag', u'fredag',
+                u'lördag', u'söndag']
+        if forced_start_day is not None:
+            d0 = forced_start_day
+        else:
+            d0 = datetime.now().weekday()
+        d1 = (d0 + 1) % 7
+        return {
+            'today': {
+                'i': d0,
+                'name': days[d0]
+            },
+            'tomorrow': {
+                'i': d1,
+                'name': days[d1]
+            }
+        }
+    
+    def find_menu_text(self, container_text):
+        d = self.day_range()
+        t = container_text.lower()
+        day_start = t.find(d['today']['name'])
+        next_day_start = t.find(d['tomorrow']['name'])
+        return container_text[day_start:next_day_start]
+    
     @abc.abstractmethod
     def fetch(self):
         return
     
 
 class Stereo(Restaurant):
+    url = "http://stereo-malmo.se/veckans-lunch/"
+    
     def fetch(self):
-        soup = BeautifulSoup(urlopen("http://stereo-malmo.se/"), "html5lib")
-        content = soup.find("div", class_ = "circle")
-        courses = [el.get_text() for el in content.find_all("li")]
+        soup = BeautifulSoup(urlopen(self.url), "html5lib")
+        start_el = soup.find("h5")
+        container = start_el.parent
+        # Remove from further text search
+        start_el.extract()
+        
+        menu_text = self.find_menu_text(container.text)
+        courses = menu_text.split("\n")[1:3]
+        
+        # Veg is special case, always last
+        veg_start = container.text.find("Veckans Vegetariska")
+        if veg_start:
+            courses += container.text[veg_start:].split("\n")[1:2]
+        
         return courses
     
 
 class DOCItaliano(Restaurant):
+    url = "http://www.docitaliano.se/"
+    
     def fetch(self):
-        soup = BeautifulSoup(urlopen("http://www.docitaliano.se/"), "html5lib")
+        soup = BeautifulSoup(urlopen(self.url), "html5lib")
         container = soup.find("div", class_ = "post_content")
-        t = container.get_text().lower()
-        d0 = datetime.now().weekday()
-        d1 = (d0+1) % 7
-        # Heroku doesn't have non-English locales installed...
-        days = [u'måndag', u'tisdag', u'onsdag', u'torsdag', u'fredag',
-                     u'lördag', u'söndag']
-        day_start = t.find(days[d0])
-        next_day_start = t.find(days[d1])
-        if day_start > 0 and next_day_start > day_start:
-            courses_text = container.get_text()[day_start:next_day_start]
-            courses_text.replace(u'\xa0', '')
-            return courses_text.split("\n")[1:3]
-        return []
+        menu_text = self.find_menu_text(container.text)
+        menu_text = menu_text.replace(u"\xa0", u"")
+        return menu_text.split("\n")[1:3]
     
 
 class P2(Restaurant):
@@ -106,3 +138,8 @@ class WhiteShark(Restaurant):
 def get_all(cache):
     return [r(cache) for r in (Stereo, DOCItaliano, P2, WhiteShark)]
 
+
+if __name__ == '__main__':
+    d = DOCItaliano(None)
+    c = d.fetch()
+    
