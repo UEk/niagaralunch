@@ -50,7 +50,10 @@ class Restaurant:
         t = container_text.lower()
         day_start = t.find(d['today']['name'])
         next_day_start = t.find(d['tomorrow']['name'])
-        return container_text[day_start:next_day_start]
+        t = container_text[day_start:next_day_start]
+        # Filter out unicode nbsp:
+        t = t.replace(u"\xa0", u"")
+        return t
     
     @abc.abstractmethod
     def fetch(self):
@@ -85,36 +88,22 @@ class DOCItaliano(Restaurant):
         soup = BeautifulSoup(urlopen(self.url), "html5lib")
         container = soup.find("div", class_ = "post_content")
         menu_text = self.find_menu_text(container.text)
-        menu_text = menu_text.replace(u"\xa0", u"")
         return menu_text.split("\n")[1:3]
     
 
 class P2(Restaurant):
+    url = "http://www.restaurangp2.se/sv/sidor/176/171/lunchmeny.aspx"
+    
     def fetch(self):
         """Finds today's P2 courses by a text search, rather than
         looking for specific elements.
         """
         # Their site specifies `bizpart.se` - that is obviously a very bad product.
         # At least send the encoding of the document ffs.
-        soup = BeautifulSoup(urlopen("http://www.restaurangp2.se/sv/sidor/176/171/lunchmeny.aspx"),
-                             "html5lib", from_encoding="UTF-8")
-        container = soup.find("div", id="MyBPControlLayout_Container_510_divContainer")
-        t = container.get_text().lower()
-        d0 = datetime.now().weekday()
-        d1 = (d0+1) % 7
-        # Heroku doesn't have non-English locales installed...
-        days = [u'måndag', u'tisdag', u'onsdag', u'torsdag', u'fredag',
-                     u'lördag', u'söndag']
-        day_start = t.find(days[d0])
-        next_day_start = t.find(days[d1])
-        
-        if day_start > 0 and next_day_start > day_start:
-            courses_text = container.get_text()[day_start:next_day_start]
-            # Remove non-braking spaces
-            courses_text = courses_text.replace(u'\xa0', u' ')
-            # Exclude day heading and empty line
-            return courses_text.split(u'\n')[1:-1]
-        return []
+        soup = BeautifulSoup(urlopen(self.url), "html5lib", from_encoding="UTF-8")
+        container = soup.find("div", id="content")
+        menu_text = self.find_menu_text(container.text)
+        return menu_text.split("\n")[1:4]
     
 
 class WhiteShark(Restaurant):
@@ -136,10 +125,5 @@ class WhiteShark(Restaurant):
     
 
 def get_all(cache):
-    return [r(cache) for r in (Stereo, DOCItaliano, P2, WhiteShark)]
+    return [r(cache) for r in (Stereo, DOCItaliano, P2)]
 
-
-if __name__ == '__main__':
-    d = DOCItaliano(None)
-    c = d.fetch()
-    
