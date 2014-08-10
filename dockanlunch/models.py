@@ -95,15 +95,22 @@ class P2(Restaurant):
     url = "http://www.restaurangp2.se/sv/sidor/176/171/lunchmeny.aspx"
     
     def fetch(self):
-        """Finds today's P2 courses by a text search, rather than
-        looking for specific elements.
-        """
         # Their site specifies `bizpart.se` - that is obviously a very bad product.
         # At least send the encoding of the document ffs.
         soup = BeautifulSoup(urlopen(self.url), "html5lib", from_encoding="UTF-8")
         container = soup.find("div", id="content")
         menu_text = self.find_menu_text(container.text)
         return menu_text.split("\n")[1:4]
+
+class Arstiderna(Restaurant):
+    name = "Årstiderna By The Sea"
+    url = "http://arstidernabythesea.se/?cat=21"
+    
+    def fetch(self):
+        soup = BeautifulSoup(urlopen(self.url), "html5lib")
+        container = soup.find("div", id="content-border")
+        menu_text = self.find_menu_text(container.text)
+        return [menu_text.split("\n")[3],]
     
 
 class WhiteShark(Restaurant):
@@ -125,5 +132,5 @@ class WhiteShark(Restaurant):
     
 
 def get_all(cache):
-    return [r(cache) for r in (Stereo, DOCItaliano, P2)]
+    return [r(cache) for r in (Stereo, DOCItaliano, P2, Arstiderna)]
 
