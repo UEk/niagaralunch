@@ -96,16 +96,21 @@ class DOCItaliano(Restaurant):
     
 
 class P2(Restaurant):
-    url = "http://www.restaurangp2.se/sv/sidor/176/171/lunchmeny.aspx"
+    url = "http://restaurangp2.se/lunch"
     
     def fetch(self):
-        # Their site specifies `bizpart.se` - that is obviously a very bad product.
-        # At least send the encoding of the document ffs.
-        soup = BeautifulSoup(urlopen(self.url), "html5lib", from_encoding="UTF-8")
-        container = soup.find("div", id="content")
-        menu_text = self.find_menu_text(container.text)
-        return menu_text.split("\n")[1:4]
-
+        # Holy crap. New site actually uses classes `monday` - `friday`
+        # to identify the respective days. However... If you don't close
+        # your divs properly, and Thursday goes within Wednesday, you're
+        # doing it wrong. So close!
+        soup = BeautifulSoup(urlopen(self.url), "html5lib")
+        day_name = datetime.now().strftime("%A").lower()
+        day_container = soup.find("div", id = day_name)
+        if day_container:
+            courses = day_container.find_all("tr")
+            return [c.get_text() for c in courses][:3]
+    
+    
 class Arstiderna(Restaurant):
     name = u"Årstiderna By The Sea"
     url = "http://arstidernabythesea.se/?cat=21"
