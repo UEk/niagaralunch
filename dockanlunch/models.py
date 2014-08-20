@@ -118,6 +118,8 @@ class Arstiderna(Restaurant):
     
 
 class WhiteShark(Restaurant):
+    name = "White Shark"
+    
     def fetch(self):
         soup = BeautifulSoup(urlopen("http://gastrogate.com/restaurang/whiteshark/page/3/"),
                              "html5lib", from_encoding="UTF-8")
@@ -136,5 +138,5 @@ class WhiteShark(Restaurant):
     
 
 def get_all(cache):
-    return [r(cache) for r in (Stereo, DOCItaliano, P2, Arstiderna)]
+    return [r(cache) for r in (Stereo, DOCItaliano, P2, Arstiderna, WhiteShark)]
 
